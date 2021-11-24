@@ -1,11 +1,11 @@
 {
-  "name": "tomcat-telegram",
+  "name": "@gostarehnegar/tomcat-telegram",
   "version": "1.0.0",
   "description": "nonee",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
-  "repository": "https://github.com/BabakMahmoudi/tomcat-telegram",
+  "repository": "https://github.com/Gostrehnegar/tomcat-telegram",
   "license": "MIT",
   "keywords": [],
   "scripts": {
