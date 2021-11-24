@@ -5,7 +5,7 @@
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
-  "repository": "https://github.com/Gostrehnegar/tomcat-telegram",
+  "repository": "https://github.com/GostarehNegar/tomcat-telegram",
   "license": "MIT",
   "keywords": [],
   "scripts": {
