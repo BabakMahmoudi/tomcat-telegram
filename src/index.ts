@@ -2,7 +2,7 @@ import tomcat from '@gostarehnegar/tomcat'
 import TelegramBot from 'node-telegram-bot-api'
 tomcat.config.data.redis.publicUrl = "redis://localhost:6379";
 tomcat.config.messaging.transports.websocket.diabled = true;
-const bus = tomcat.Domain.Services.getBus()
+// const bus = tomcat.Domain.Services.getBus()
 const redisBus = new tomcat.Infrastructure.Bus.RedisBus();
 
 
@@ -41,29 +41,29 @@ redisBus.publish("bots/telegram/controls/started", { port: null, id: "telegram" 
 //     });
 
 // });
-// const subscribed = false
-// bot.onText(/\/start/, (msg) => {
-//     if (!subscribed) {
-//         bus.subscribe("bots/mohsen/wallet/*", (m) => {
-//             const message = m.content<{ doge: number, usdt: number, time: string }>()
-//             if (m.Topic.includes("buy")) {
-//                 bot.sendMessage(msg.chat.id, `bought ${message.doge} DOGE at ${message.time} usdt : ${message.usdt}`)
-//             }
-//             else if (m.Topic.includes("sell")) {
-//                 bot.sendMessage(msg.chat.id, `sold ${message.usdt} worth of doge at ${message.time} doge : ${message.usdt}`)
-//             }
-//         })
-//         bot.sendMessage(msg.chat.id , "subscribed")
-//     }
-//     bot.sendMessage(msg.chat.id, "already subscribed")
-// });
-// `logger/${level}`
+const subscribed = false
 bot.onText(/\/start/, (msg) => {
-    bus.subscribe('logger/*',async (m)=>{
-        const message = m.message.cast<{message:unknown , params:unknown[]}>()
-        bot.sendMessage(msg.chat.id , message.message)
-    })
-})
+    if (!subscribed) {
+        redisBus.subscribe("bots/mohsen/controls/*", (m) => {
+                const message = m.content<{ port: number, id: string }>();
+                bot.sendMessage(msg.chat.id, `<a href="http://127.0.0.1:${message.port}/trades">Trades</a>`, { parse_mode: "HTML" });
+            })
+        redisBus.subscribe("bots/mohsen/wallet/*", (m) => {
+            const message = m.content<{ doge: number, usdt: number, time: string }>()
+            if (m.Topic.includes("buy")) {
+                bot.sendMessage(msg.chat.id, `bought ${message.usdt} worth of doge at ${message.time}`)
+            }
+            else if (m.Topic.includes("sell")) {
+                bot.sendMessage(msg.chat.id, `sold ${message.doge} DOGE at ${message.time}`)
+            }
+        })
+        bot.sendMessage(msg.chat.id , "subscribed")
+    }else{
+
+        bot.sendMessage(msg.chat.id, "already subscribed")
+    }
+});
+// `logger/${level}`
 // const subs = new Subscriptions()
 // bot.on('message', (msg) => {
 //     if (msg.text.indexOf("mohsen") === 0) {
@@ -74,7 +74,7 @@ bot.onText(/\/start/, (msg) => {
 //                 const message = m.content<{ port: number, id: string }>();
 //                 bot.sendMessage(msg.chat.id, `<a href="http://127.0.0.1:${message.port}/trades">Trades</a>`, { parse_mode: "HTML" });
 //             })
-//             bus.subscribe("bots/mohsen/signals/*", (m) => {
+//             bus.subscribe("bots/mohsen/wallet/*", (m) => {
 //                 const message = m.content<{ signal: string, candle: tomcat.Domain.Base.CandleStickData }>();
 //                 bot.sendMessage(msg.chat.id, `${message.signal} recevied at ${message.candle.closeTime} price : ${message.candle.close}`);
 
